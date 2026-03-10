@@ -27,4 +27,4 @@ Deux modes : saisie texte ou upload de fichiers réels.
 - **upload.html** : mode upload avec gestion de fichiers.
 
 ## Auteur
-777 Tools
+7 & U...

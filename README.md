@@ -2,7 +2,7 @@
 
 [![PWA](https://img.shields.io/badge/PWA-ready-blue)](https://developer.mozilla.org/fr/docs/Web/Progressive_web_apps)
 [![Licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/...)](https://cleanfiles7.netlify.app)
+[![Author](https://img.shields.io/badge/Built%20with%20♥︎%20by%20septieme7-3677FF)](https://septieme7.github.io/CleanFiles-v2/)
 
 **Nettoyeur de Noms de Fichiers** est une application web progressive (PWA) qui permet de nettoyer en lot les noms de fichiers en supprimant les caractères invalides (émoticônes, symboles spéciaux, ponctuation problématique) et en appliquant diverses transformations. Elle fonctionne **entièrement côté client** : aucun fichier n'est envoyé vers un serveur, garantissant ainsi la confidentialité de vos données.
 

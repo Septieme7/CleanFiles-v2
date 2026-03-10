@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeModal = document.getElementById('closeModal');
     const createZipBtn = document.getElementById('createZipBtn');
 
+    // Vérifier que les éléments existent (évite les erreurs si on est sur la mauvaise page)
+    if (!dropZone) return;
+
     // Stockage des fichiers
     let files = []; // Chaque élément : { file: File, cleanedName: string }
 
@@ -27,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function handleFiles(event) {
         const newFiles = Array.from(event.target.files);
-        // Limites : max 500 fichiers, 2Go/fichier, 10Go total
         const MAX_FILES = 500;
         const MAX_SIZE_PER_FILE = 2 * 1024 * 1024 * 1024; // 2 Go
         const MAX_TOTAL_SIZE = 10 * 1024 * 1024 * 1024; // 10 Go
@@ -47,9 +49,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert(`Taille totale maximum (10 Go) dépassée. Arrêt.`);
                 break;
             }
-            files.push({ file: f, cleanedName: f.name }); // nom nettoyé = original par défaut
+            files.push({ file: f, cleanedName: f.name });
             totalSize += f.size;
         }
+        // Réinitialiser l'input pour permettre de re-sélectionner les mêmes fichiers
+        fileInput.value = '';
         updateFileList();
     }
 
@@ -120,26 +124,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ========== NETTOYAGE (APPLICATION DES OPTIONS) ==========
     function cleanAllFiles() {
-        const options = getOptions();
-        const forbidden = getForbiddenChars();
+        const options = window.getOptions();
+        const forbidden = window.getForbiddenChars();
 
         // Première passe : calculer les noms nettoyés sans suffixe doublon
         files.forEach(item => {
             const original = item.file.name;
-            const cleaned = cleanFilename(original, options, forbidden);
+            const cleaned = window.cleanFilename(original, options, forbidden);
             item.cleanedName = cleaned;
         });
 
-        // Si l'option suffixe doublon est activée
+        // Gestion des doublons (suffixe numérique)
         if (options.suffixDuplicates) {
-            // Compter les occurrences
             const counter = new Map();
             files.forEach(item => {
                 const name = item.cleanedName;
                 counter.set(name, (counter.get(name) || 0) + 1);
             });
 
-            // Appliquer un suffixe si nécessaire
             const suffixCount = new Map();
             files.forEach(item => {
                 const name = item.cleanedName;
@@ -147,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const count = (suffixCount.get(name) || 0) + 1;
                     suffixCount.set(name, count);
 
-                    // Construire le nouveau nom avec suffixe
                     const lastDot = name.lastIndexOf('.');
                     let base = lastDot === -1 ? name : name.substring(0, lastDot);
                     let ext = lastDot === -1 ? '' : name.substring(lastDot);
@@ -160,6 +161,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         item.cleanedName = base + count + ext;
                     }
                 }
+            });
+        }
+
+        // Gestion de la numérotation de tous les fichiers (option numberAll)
+        if (options.numberAll) {
+            let counter = options.numberStart;
+            files.forEach(item => {
+                const name = item.cleanedName;
+                const lastDot = name.lastIndexOf('.');
+                let base = lastDot === -1 ? name : name.substring(0, lastDot);
+                let ext = lastDot === -1 ? '' : name.substring(lastDot);
+                item.cleanedName = base + counter + ext;
+                counter++;
             });
         }
 

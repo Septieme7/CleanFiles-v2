@@ -12,6 +12,7 @@
     <link rel="manifest" href="assets/manifest/site.webmanifest">
     <!-- Styles -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <!-- JSZip -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body data-page="upload">
@@ -35,77 +36,189 @@
             <p class="subtitle">Déposez vos fichiers (max 500, 2 Go chacun, 10 Go total) pour les renommer en lot.</p>
         </header>
 
-        <!-- Options de nettoyage (réutilisées) -->
+        <!-- Options de nettoyage -->
         <section class="card">
             <h2>Options de nettoyage</h2>
             <div class="options-grid">
-                <!-- Remplacer un caractère par un espace -->
-                <div class="option-item">
-                    <label for="optReplaceChar">Remplacer le caractère :</label>
-                    <input type="text" id="optReplaceChar" maxlength="1" placeholder="ex: _">
-                    <span>par un espace</span>
-                    <span class="option-example">ex: "fichier_test.txt" avec "_" → "fichier test.txt"</span>
+                <!-- Même structure que dans index.html, répéter toutes les cartes -->
+                <!-- Remplacer caractère(s) par espace -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <label for="optReplaceChar">Remplacer le(s) caractère(s) :</label>
+                        <input type="text" id="optReplaceChar" placeholder="ex: _-*">
+                        <span>par un espace</span>
+                    </div>
+                    <div class="option-example">ex: "fichier_test-abc.txt" avec "_-" → "fichier test abc.txt"</div>
                 </div>
 
                 <!-- Remplacer les espaces par _ -->
-                <div class="option-item">
-                    <input type="checkbox" id="optReplaceSpaces">
-                    <label for="optReplaceSpaces">Remplacer les espaces par _</label>
-                    <span class="option-example">ex: "mon fichier.txt" → "mon_fichier.txt"</span>
+                <div class="option-card">
+                    <div class="option-header">
+                        <input type="checkbox" id="optReplaceSpaces">
+                        <label for="optReplaceSpaces">Remplacer les espaces par _</label>
+                    </div>
+                    <div class="option-example">ex: "mon fichier.txt" → "mon_fichier.txt"</div>
                 </div>
 
                 <!-- Supprimer tous les espaces -->
-                <div class="option-item">
-                    <input type="checkbox" id="optRemoveSpaces">
-                    <label for="optRemoveSpaces">Supprimer tous les espaces</label>
-                    <span class="option-example">ex: "mon fichier.txt" → "monfichier.txt"</span>
+                <div class="option-card">
+                    <div class="option-header">
+                        <input type="checkbox" id="optRemoveSpaces">
+                        <label for="optRemoveSpaces">Supprimer tous les espaces</label>
+                    </div>
+                    <div class="option-example">ex: "mon fichier.txt" → "monfichier.txt"</div>
                 </div>
 
                 <!-- Convertir en minuscules -->
-                <div class="option-item">
-                    <input type="checkbox" id="optLowercase">
-                    <label for="optLowercase">Convertir en minuscules</label>
-                    <span class="option-example">ex: "MON FICHIER.TXT" → "mon fichier.txt"</span>
+                <div class="option-card">
+                    <div class="option-header">
+                        <input type="checkbox" id="optLowercase">
+                        <label for="optLowercase">Convertir en minuscules</label>
+                    </div>
+                    <div class="option-example">ex: "MON FICHIER.TXT" → "mon fichier.txt"</div>
                 </div>
 
                 <!-- Convertir en majuscules -->
-                <div class="option-item">
-                    <input type="checkbox" id="optUppercase">
-                    <label for="optUppercase">Convertir en majuscules</label>
-                    <span class="option-example">ex: "mon fichier.txt" → "MON FICHIER.TXT"</span>
+                <div class="option-card">
+                    <div class="option-header">
+                        <input type="checkbox" id="optUppercase">
+                        <label for="optUppercase">Convertir en majuscules</label>
+                    </div>
+                    <div class="option-example">ex: "mon fichier.txt" → "MON FICHIER.TXT"</div>
                 </div>
 
                 <!-- Préfixe -->
-                <div class="option-item">
-                    <label for="optPrefix">Préfixe :</label>
-                    <input type="text" id="optPrefix" placeholder="ex: clean_">
-                    <span class="option-example">ex: "fichier.txt" → "clean_fichier.txt"</span>
+                <div class="option-card">
+                    <div class="option-header">
+                        <label for="optPrefix">Préfixe :</label>
+                        <input type="text" id="optPrefix" placeholder="ex: clean_">
+                    </div>
+                    <div class="option-example">ex: "fichier.txt" → "clean_fichier.txt"</div>
                 </div>
 
                 <!-- Ajouter un suffixe numérique aux doublons -->
-                <div class="option-item">
-                    <input type="checkbox" id="optSuffixDuplicates">
-                    <label for="optSuffixDuplicates">Ajouter un suffixe numérique aux doublons</label>
-                    <span class="option-example">ex: "fichier.txt", "fichier.txt" → "fichier.txt", "fichier1.txt"</span>
+                <div class="option-card">
+                    <div class="option-header">
+                        <input type="checkbox" id="optSuffixDuplicates">
+                        <label for="optSuffixDuplicates">Ajouter un suffixe numérique aux doublons</label>
+                    </div>
+                    <div class="option-example">ex: "fichier.txt", "fichier.txt" → "fichier.txt", "fichier1.txt"</div>
                 </div>
 
                 <!-- Appliquer aussi au premier fichier -->
-                <div class="option-item">
-                    <input type="checkbox" id="optSuffixFirst">
-                    <label for="optSuffixFirst">Appliquer aussi au premier fichier</label>
-                    <span class="option-example">ex: "fichier.txt" → "fichier1.txt" (si option doublons activée)</span>
+                <div class="option-card">
+                    <div class="option-header">
+                        <input type="checkbox" id="optSuffixFirst">
+                        <label for="optSuffixFirst">Appliquer aussi au premier fichier</label>
+                    </div>
+                    <div class="option-example">ex: "fichier.txt" → "fichier1.txt" (si option doublons activée)</div>
                 </div>
 
                 <!-- Utiliser uniquement le suffixe comme nom -->
-                <div class="option-item">
-                    <input type="checkbox" id="optSuffixOnly">
-                    <label for="optSuffixOnly">Utiliser uniquement le suffixe comme nom</label>
-                    <span class="option-example">ex: "fichier.txt" avec préfixe "doc" → "doc1.txt" (si doublons)</span>
+                <div class="option-card">
+                    <div class="option-header">
+                        <input type="checkbox" id="optSuffixOnly">
+                        <label for="optSuffixOnly">Utiliser uniquement le suffixe comme nom</label>
+                    </div>
+                    <div class="option-example">ex: "fichier.txt" avec préfixe "doc" → "doc1.txt" (si doublons)</div>
+                </div>
+
+                <!-- Supprimer les accents -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <input type="checkbox" id="optRemoveAccents">
+                        <label for="optRemoveAccents">Supprimer les accents</label>
+                    </div>
+                    <div class="option-example">ex: "hélicoptère.jpg" → "helicoptere.jpg"</div>
+                </div>
+
+                <!-- Remplacer caractères spéciaux par tiret -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <input type="checkbox" id="optReplaceSpecialByDash">
+                        <label for="optReplaceSpecialByDash">Remplacer caractères spéciaux par tiret</label>
+                    </div>
+                    <div class="option-example">ex: "mon@fichier!test.txt" → "mon-fichier-test.txt"</div>
+                </div>
+
+                <!-- Limiter la longueur du nom -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <label for="optMaxLength">Longueur max (0 = illimité) :</label>
+                        <input type="number" id="optMaxLength" min="0" value="0">
+                    </div>
+                    <div class="option-example">ex: "fichier_tres_long.txt" avec max 8 → "fichier_.txt"</div>
+                </div>
+
+                <!-- Ajouter date/heure -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <label for="optAddDateTime">Ajouter date/heure :</label>
+                        <select id="optAddDateTime">
+                            <option value="none">Aucun</option>
+                            <option value="prefix">Préfixe (AAAAMMJJ_HHMM)</option>
+                            <option value="suffix">Suffixe (AAAAMMJJ_HHMM)</option>
+                        </select>
+                    </div>
+                    <div class="option-example">ex: "fichier.txt" avec préfixe → "20250310_1430_fichier.txt"</div>
+                </div>
+
+                <!-- Supprimer mots-clés -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <label for="optRemoveKeywords">Mots-clés à supprimer (séparés par des virgules) :</label>
+                        <input type="text" id="optRemoveKeywords" placeholder="ex: copy, (1)">
+                    </div>
+                    <div class="option-example">ex: "fichier copy (1).txt" avec "copy, (1)" → "fichier .txt"</div>
+                </div>
+
+                <!-- Numéroter tous les fichiers -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <input type="checkbox" id="optNumberAll">
+                        <label for="optNumberAll">Numéroter tous les fichiers</label>
+                        <label for="optNumberStart">Début :</label>
+                        <input type="number" id="optNumberStart" min="1" value="1" style="width: 80px;">
+                    </div>
+                    <div class="option-example">ex: "fichier.txt" → "fichier1.txt", "fichier2.txt"...</div>
+                </div>
+
+                <!-- Remplacer les points par des tirets (sauf dernier) -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <input type="checkbox" id="optReplaceDotsByDash">
+                        <label for="optReplaceDotsByDash">Remplacer les points par des tirets (sauf dernier)</label>
+                    </div>
+                    <div class="option-example">ex: "mon.fichier.test.txt" → "mon-fichier-test.txt"</div>
+                </div>
+
+                <!-- Style de casse -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <label for="optCaseStyle">Style de casse :</label>
+                        <select id="optCaseStyle">
+                            <option value="none">Aucun</option>
+                            <option value="camelCase">camelCase</option>
+                            <option value="PascalCase">PascalCase</option>
+                            <option value="snake_case">snake_case</option>
+                            <option value="kebab-case">kebab-case</option>
+                        </select>
+                    </div>
+                    <div class="option-example">ex: "mon fichier test" → "monFichierTest" (camelCase)</div>
+                </div>
+
+                <!-- Normaliser les espaces -->
+                <div class="option-card">
+                    <div class="option-header">
+                        <input type="checkbox" id="optNormalizeSpaces">
+                        <label for="optNormalizeSpaces">Normaliser les espaces (multiples → un seul)</label>
+                    </div>
+                    <div class="option-example">ex: "mon    fichier.txt" → "mon fichier.txt"</div>
                 </div>
             </div>
 
             <!-- Bouton de personnalisation des caractères interdits -->
-            <button id="customizeCharsBtn" class="secondary" style="margin-top: 1rem;">Personnaliser caractères interdits</button>
+            <button id="customizeCharsBtn" class="secondary" style="margin-top: 1.5rem;">Personnaliser caractères interdits</button>
             <p class="option-example" style="margin-top: 0.5rem;">Exemple : supprimer les émoticônes, *, ?, etc.</p>
         </section>
 
@@ -126,19 +239,18 @@
         <section class="card">
             <h2>Fichiers chargés</h2>
             <div id="fileList" class="file-list">
-                <!-- Les fichiers apparaîtront ici -->
                 <p class="text-muted">Aucun fichier chargé.</p>
             </div>
             <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
                 <button id="cleanAllBtn">Nettoyer tous</button>
-                <button id="downloadAllBtn" class="secondary">Télécharger tous (ZIP simulé)</button>
+                <button id="downloadAllBtn" class="secondary">Télécharger tous (ZIP)</button>
                 <button id="clearAllBtn" class="secondary">Tout effacer</button>
                 <button id="archiveBtn">Créer une archive (modal)</button>
             </div>
         </section>
     </main>
 
-    <!-- Modal d'archivage (simulé) -->
+    <!-- Modal d'archivage -->
     <div id="archiveModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -151,7 +263,7 @@
                 <li>Mot de passe : non supporté</li>
                 <li>Division : non supportée</li>
             </ul>
-            <button id="createZipBtn" class="secondary">Créer (simulation)</button>
+            <button id="createZipBtn" class="secondary">Créer l'archive</button>
         </div>
     </div>
 
@@ -163,7 +275,7 @@
     <!-- Bouton retour en haut -->
     <button id="backToTop" title="Retour en haut">↑</button>
 
-    <!-- Script -->
+    <!-- Scripts -->
     <script src="assets/js/script.js"></script>
     <script src="assets/js/upload.js"></script>
 </body>

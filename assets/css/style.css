@@ -203,40 +203,6 @@ button.secondary:hover {
     background: #5a6268;
 }
 
-/* ===== Options de nettoyage ===== */
-.options-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    margin: 1.5rem 0;
-}
-
-/* Pour permettre le retour à la ligne dans les options */
-.option-item {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* Style des textes d'exemple */
-.option-example {
-    flex: 1 1 100%; /* Prend toute la largeur et passe à la ligne */
-    font-size: 0.8rem;
-    color: #6c757d;
-    margin-left: 0;
-}
-
-.option-item input[type="checkbox"],
-.option-item input[type="radio"] {
-    width: 20px;
-    height: 20px;
-}
-
-.option-item label {
-    cursor: pointer;
-}
-
 /* ===== Zone de texte ===== */
 .text-zone {
     width: 100%;
@@ -251,10 +217,6 @@ button.secondary:hover {
     border: 1px solid var(--border-light);
     border-radius: 12px;
     padding: 1rem;
-}
-
-body.dark-mode .option-example {
-    color: #aaa;
 }
 
 .file-item {
@@ -361,7 +323,7 @@ body.dark-mode .badge {
     color: #80b4ff;
 }
 
-/* ===== Exemples ===== */
+/* ===== Exemples (boutons) ===== */
 .example-buttons {
     display: flex;
     flex-wrap: wrap;
@@ -381,6 +343,68 @@ body.dark-mode .example-btn {
     color: var(--text-dark);
 }
 
+/* ===== NOUVEAU STYLE POUR LES OPTIONS DE NETTOYAGE ===== */
+.options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.option-card {
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 1.2rem;
+    background-color: rgba(0,0,0,0.02);
+    transition: var(--transition);
+}
+
+body.dark-mode .option-card {
+    border-color: var(--border-dark);
+    background-color: rgba(255,255,255,0.02);
+}
+
+.option-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.option-header label {
+    font-weight: 600;
+    min-width: 200px;
+}
+
+.option-header input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem;
+}
+
+.option-header input[type="text"],
+.option-header input[type="number"],
+.option-header select {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+}
+
+.option-example {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+    padding-left: 0.5rem;
+    border-left: 3px solid var(--primary);
+}
+
+body.dark-mode .option-example {
+    color: #aaa;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
     .nav-container {
@@ -393,7 +417,7 @@ body.dark-mode .example-btn {
     .card {
         padding: 1.5rem;
     }
-    .options-grid {
-        grid-template-columns: 1fr;
+    .option-header label {
+        min-width: 100%;
     }
 }

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nettoyeur de Noms - Mode Texte</title>
+    <meta name="description" content="Nettoyez vos noms de fichiers en mode texte : saisissez une liste, nettoyez, exportez.">
+    <!-- Icônes -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="assets/manifest/site.webmanifest">
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="text">
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container container">
+            <a href="index.html" class="nav-logo">
+                <span>⚡</span> Nettoyeur 777
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="active">Texte</a>
+                <a href="upload.html">Upload</a>
+                <button id="themeToggle" class="theme-toggle" aria-label="Basculer thème">🌙</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header class="page-header">
+            <h1>📝 Mode Texte</h1>
+            <p class="subtitle">Collez votre liste de noms de fichiers (un par ligne) et nettoyez-les.</p>
+        </header>
+
+        <!-- Options de nettoyage (à gauche ou au-dessus) -->
+                <section class="card">
+                    <h2>Options de nettoyage</h2>
+                    <div class="options-grid">
+                        <!-- Remplacer un caractère par un espace -->
+                        <div class="option-item">
+                            <label for="optReplaceChar">Remplacer le caractère :</label>
+                            <input type="text" id="optReplaceChar" maxlength="1" placeholder="ex: _">
+                            <span>par un espace</span>
+                            <span class="option-example">ex: "fichier_test.txt" avec "_" → "fichier test.txt"</span>
+                        </div>
+
+                        <!-- Remplacer les espaces par _ -->
+                        <div class="option-item">
+                            <input type="checkbox" id="optReplaceSpaces">
+                            <label for="optReplaceSpaces">Remplacer les espaces par _</label>
+                            <span class="option-example">ex: "mon fichier.txt" → "mon_fichier.txt"</span>
+                        </div>
+
+                        <!-- Supprimer tous les espaces -->
+                        <div class="option-item">
+                            <input type="checkbox" id="optRemoveSpaces">
+                            <label for="optRemoveSpaces">Supprimer tous les espaces</label>
+                            <span class="option-example">ex: "mon fichier.txt" → "monfichier.txt"</span>
+                        </div>
+
+                        <!-- Convertir en minuscules -->
+                        <div class="option-item">
+                            <input type="checkbox" id="optLowercase">
+                            <label for="optLowercase">Convertir en minuscules</label>
+                            <span class="option-example">ex: "MON FICHIER.TXT" → "mon fichier.txt"</span>
+                        </div>
+
+                        <!-- Convertir en majuscules -->
+                        <div class="option-item">
+                            <input type="checkbox" id="optUppercase">
+                            <label for="optUppercase">Convertir en majuscules</label>
+                            <span class="option-example">ex: "mon fichier.txt" → "MON FICHIER.TXT"</span>
+                        </div>
+
+                        <!-- Préfixe -->
+                        <div class="option-item">
+                            <label for="optPrefix">Préfixe :</label>
+                            <input type="text" id="optPrefix" placeholder="ex: clean_">
+                            <span class="option-example">ex: "fichier.txt" → "clean_fichier.txt"</span>
+                        </div>
+
+                        <!-- Ajouter un suffixe numérique aux doublons -->
+                        <div class="option-item">
+                            <input type="checkbox" id="optSuffixDuplicates">
+                            <label for="optSuffixDuplicates">Ajouter un suffixe numérique aux doublons</label>
+                            <span class="option-example">ex: "fichier.txt", "fichier.txt" → "fichier.txt", "fichier1.txt"</span>
+                        </div>
+
+                        <!-- Appliquer aussi au premier fichier -->
+                        <div class="option-item">
+                            <input type="checkbox" id="optSuffixFirst">
+                            <label for="optSuffixFirst">Appliquer aussi au premier fichier</label>
+                            <span class="option-example">ex: "fichier.txt" → "fichier1.txt" (si option doublons activée)</span>
+                        </div>
+
+                        <!-- Utiliser uniquement le suffixe comme nom -->
+                        <div class="option-item">
+                            <input type="checkbox" id="optSuffixOnly">
+                            <label for="optSuffixOnly">Utiliser uniquement le suffixe comme nom</label>
+                            <span class="option-example">ex: "fichier.txt" avec préfixe "doc" → "doc1.txt" (si doublons)</span>
+                        </div>
+                    </div>
+
+                    <!-- Bouton de personnalisation des caractères interdits -->
+                    <button id="customizeCharsBtn" class="secondary" style="margin-top: 1rem;">Personnaliser caractères interdits</button>
+                    <p class="option-example" style="margin-top: 0.5rem;">Exemple : supprimer les émoticônes, *, ?, etc.</p>
+                </section>
+
+        <!-- Zone de saisie -->
+        <section class="card">
+            <h2>Liste des noms</h2>
+            <textarea id="inputText" class="text-zone" placeholder="Saisissez vos noms de fichiers (un par ligne)..."></textarea>
+            <div class="example-buttons">
+                <button class="example-btn" data-example="mon fichier.txt\nphoto de vacances (2).jpg\nRAPPORT_FINAL (vrai).docx\n🎉soirée🎈.mp4">Exemple 1</button>
+                <button class="example-btn" data-example="fichier 1.txt\nfichier 1.txt\ndocument final (version 2).pdf">Exemple 2 (doublons)</button>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button id="cleanBtn">Nettoyer les noms</button>
+                <button id="exportBtn" class="secondary">Exporter les résultats (.txt)</button>
+            </div>
+        </section>
+
+        <!-- Résultats -->
+        <section class="card">
+            <h2>Résultats</h2>
+            <div id="output" class="file-list">
+                <!-- Les résultats seront insérés ici -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Nettoyeur de Fichiers © 2026</p>
+    </footer>
+
+    <!-- Bouton retour en haut -->
+    <button id="backToTop" title="Retour en haut">↑</button>
+
+    <!-- Script -->
+    <script src="assets/js/script.js"></script>
+</body>
+</html>

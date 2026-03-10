@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nettoyeur de Noms - Mode Upload</title>
+    <meta name="description" content="Nettoyez vos fichiers en les téléversant localement : renommage batch, téléchargement individuel ou groupé.">
+    <!-- Icônes -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="assets/manifest/site.webmanifest">
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body data-page="upload">
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container container">
+            <a href="index.html" class="nav-logo">
+                <span>⚡</span> Nettoyeur 777
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Texte</a>
+                <a href="upload.html" class="active">Upload</a>
+                <button id="themeToggle" class="theme-toggle" aria-label="Basculer thème">🌙</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header class="page-header">
+            <h1>📁 Mode Upload</h1>
+            <p class="subtitle">Déposez vos fichiers (max 500, 2 Go chacun, 10 Go total) pour les renommer en lot.</p>
+        </header>
+
+        <!-- Options de nettoyage (réutilisées) -->
+        <section class="card">
+            <h2>Options de nettoyage</h2>
+            <div class="options-grid">
+                <!-- Remplacer un caractère par un espace -->
+                <div class="option-item">
+                    <label for="optReplaceChar">Remplacer le caractère :</label>
+                    <input type="text" id="optReplaceChar" maxlength="1" placeholder="ex: _">
+                    <span>par un espace</span>
+                    <span class="option-example">ex: "fichier_test.txt" avec "_" → "fichier test.txt"</span>
+                </div>
+
+                <!-- Remplacer les espaces par _ -->
+                <div class="option-item">
+                    <input type="checkbox" id="optReplaceSpaces">
+                    <label for="optReplaceSpaces">Remplacer les espaces par _</label>
+                    <span class="option-example">ex: "mon fichier.txt" → "mon_fichier.txt"</span>
+                </div>
+
+                <!-- Supprimer tous les espaces -->
+                <div class="option-item">
+                    <input type="checkbox" id="optRemoveSpaces">
+                    <label for="optRemoveSpaces">Supprimer tous les espaces</label>
+                    <span class="option-example">ex: "mon fichier.txt" → "monfichier.txt"</span>
+                </div>
+
+                <!-- Convertir en minuscules -->
+                <div class="option-item">
+                    <input type="checkbox" id="optLowercase">
+                    <label for="optLowercase">Convertir en minuscules</label>
+                    <span class="option-example">ex: "MON FICHIER.TXT" → "mon fichier.txt"</span>
+                </div>
+
+                <!-- Convertir en majuscules -->
+                <div class="option-item">
+                    <input type="checkbox" id="optUppercase">
+                    <label for="optUppercase">Convertir en majuscules</label>
+                    <span class="option-example">ex: "mon fichier.txt" → "MON FICHIER.TXT"</span>
+                </div>
+
+                <!-- Préfixe -->
+                <div class="option-item">
+                    <label for="optPrefix">Préfixe :</label>
+                    <input type="text" id="optPrefix" placeholder="ex: clean_">
+                    <span class="option-example">ex: "fichier.txt" → "clean_fichier.txt"</span>
+                </div>
+
+                <!-- Ajouter un suffixe numérique aux doublons -->
+                <div class="option-item">
+                    <input type="checkbox" id="optSuffixDuplicates">
+                    <label for="optSuffixDuplicates">Ajouter un suffixe numérique aux doublons</label>
+                    <span class="option-example">ex: "fichier.txt", "fichier.txt" → "fichier.txt", "fichier1.txt"</span>
+                </div>
+
+                <!-- Appliquer aussi au premier fichier -->
+                <div class="option-item">
+                    <input type="checkbox" id="optSuffixFirst">
+                    <label for="optSuffixFirst">Appliquer aussi au premier fichier</label>
+                    <span class="option-example">ex: "fichier.txt" → "fichier1.txt" (si option doublons activée)</span>
+                </div>
+
+                <!-- Utiliser uniquement le suffixe comme nom -->
+                <div class="option-item">
+                    <input type="checkbox" id="optSuffixOnly">
+                    <label for="optSuffixOnly">Utiliser uniquement le suffixe comme nom</label>
+                    <span class="option-example">ex: "fichier.txt" avec préfixe "doc" → "doc1.txt" (si doublons)</span>
+                </div>
+            </div>
+
+            <!-- Bouton de personnalisation des caractères interdits -->
+            <button id="customizeCharsBtn" class="secondary" style="margin-top: 1rem;">Personnaliser caractères interdits</button>
+            <p class="option-example" style="margin-top: 0.5rem;">Exemple : supprimer les émoticônes, *, ?, etc.</p>
+        </section>
+
+        <!-- Drop zone -->
+        <section class="card">
+            <h2>Déposer vos fichiers</h2>
+            <div class="drop-zone" id="dropZone">
+                <p>Glissez-déposez vos fichiers ici ou cliquez pour sélectionner</p>
+                <p style="font-size: 0.9rem; color: #666;">(Limites : 500 fichiers, 2 Go max par fichier)</p>
+            </div>
+            <input type="file" id="fileInput" multiple style="display: none;">
+            <div class="stats" id="stats">
+                Fichiers : 0 | Taille totale : 0 o
+            </div>
+        </section>
+
+        <!-- Liste des fichiers -->
+        <section class="card">
+            <h2>Fichiers chargés</h2>
+            <div id="fileList" class="file-list">
+                <!-- Les fichiers apparaîtront ici -->
+                <p class="text-muted">Aucun fichier chargé.</p>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+                <button id="cleanAllBtn">Nettoyer tous</button>
+                <button id="downloadAllBtn" class="secondary">Télécharger tous (ZIP simulé)</button>
+                <button id="clearAllBtn" class="secondary">Tout effacer</button>
+                <button id="archiveBtn">Créer une archive (modal)</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal d'archivage (simulé) -->
+    <div id="archiveModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Créer une archive ZIP</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <p>Options d'archivage (simulation) :</p>
+            <ul>
+                <li>Compression : 0-9 (non implémenté)</li>
+                <li>Mot de passe : non supporté</li>
+                <li>Division : non supportée</li>
+            </ul>
+            <button id="createZipBtn" class="secondary">Créer (simulation)</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Nettoyeur de Fichiers © 2026</p>
+    </footer>
+
+    <!-- Bouton retour en haut -->
+    <button id="backToTop" title="Retour en haut">↑</button>
+
+    <!-- Script -->
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/upload.js"></script>
+</body>
+</html>

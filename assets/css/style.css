@@ -1,0 +1,399 @@
+/* ===== Variables et reset ===== */
+:root {
+    --primary: #2575fc;
+    --primary-dark: #1a5fd0;
+    --bg-light: #f8f9fa;
+    --bg-dark: #1a1a1a;
+    --text-light: #333;
+    --text-dark: #e0e0e0;
+    --card-light: #ffffff;
+    --card-dark: #2d2d2d;
+    --border-light: #e9ecef;
+    --border-dark: #444;
+    --shadow: 0 8px 20px rgba(0,0,0,0.05);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    line-height: 1.6;
+    background-color: var(--bg-light);
+    color: var(--text-light);
+    transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+body.dark-mode {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ===== Layout ===== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ===== Navigation ===== */
+.main-nav {
+    background: linear-gradient(135deg, var(--primary) 0%, #6a11cb 100%);
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 1rem 20px;
+    gap: 1rem;
+}
+
+.nav-logo {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    border-bottom-color: white;
+}
+
+.theme-toggle {
+    background: none;
+    border: 2px solid white;
+    border-radius: 30px;
+    color: white;
+    font-size: 1.2rem;
+    padding: 0.3rem 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.theme-toggle:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* ===== Bouton retour en haut ===== */
+#backToTop {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 1000;
+    transition: var(--transition);
+}
+
+#backToTop.show {
+    display: flex;
+}
+
+#backToTop:hover {
+    background: var(--primary-dark);
+    transform: scale(1.1);
+}
+
+/* ===== Cartes ===== */
+.card {
+    background: var(--card-light);
+    border-radius: 24px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    transition: var(--transition);
+}
+
+body.dark-mode .card {
+    background: var(--card-dark);
+    border-color: var(--border-dark);
+}
+
+.card h2 {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-light);
+    padding-bottom: 0.5rem;
+    font-size: 1.8rem;
+}
+
+body.dark-mode .card h2 {
+    border-bottom-color: var(--border-dark);
+}
+
+/* ===== Formulaires ===== */
+textarea, input, select, button {
+    font-family: inherit;
+    font-size: 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    padding: 0.8rem 1.2rem;
+    transition: var(--transition);
+}
+
+body.dark-mode textarea,
+body.dark-mode input,
+body.dark-mode select {
+    background: var(--card-dark);
+    color: var(--text-dark);
+    border-color: var(--border-dark);
+}
+
+button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+button.secondary {
+    background: #6c757d;
+}
+
+button.secondary:hover {
+    background: #5a6268;
+}
+
+/* ===== Options de nettoyage ===== */
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+/* Pour permettre le retour à la ligne dans les options */
+.option-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Style des textes d'exemple */
+.option-example {
+    flex: 1 1 100%; /* Prend toute la largeur et passe à la ligne */
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-left: 0;
+}
+
+.option-item input[type="checkbox"],
+.option-item input[type="radio"] {
+    width: 20px;
+    height: 20px;
+}
+
+.option-item label {
+    cursor: pointer;
+}
+
+/* ===== Zone de texte ===== */
+.text-zone {
+    width: 100%;
+    min-height: 200px;
+    margin-bottom: 1rem;
+}
+
+/* ===== Liste de fichiers ===== */
+.file-list {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+body.dark-mode .option-example {
+    color: #aaa;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+body.dark-mode .file-item {
+    border-bottom-color: var(--border-dark);
+}
+
+.file-item:last-child {
+    border-bottom: none;
+}
+
+.file-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* ===== Drop zone ===== */
+.drop-zone {
+    border: 2px dashed var(--primary);
+    border-radius: 24px;
+    padding: 3rem;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-bottom: 1rem;
+}
+
+.drop-zone:hover {
+    background: rgba(37, 117, 252, 0.05);
+}
+
+body.dark-mode .drop-zone:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+/* ===== Modals ===== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--card-light);
+    border-radius: 24px;
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+body.dark-mode .modal-content {
+    background: var(--card-dark);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--text-light);
+    box-shadow: none;
+}
+
+body.dark-mode .close-modal {
+    color: var(--text-dark);
+}
+
+/* ===== Badges ===== */
+.badge {
+    display: inline-block;
+    background: #e7f3ff;
+    color: var(--primary);
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+body.dark-mode .badge {
+    background: #1e3a5f;
+    color: #80b4ff;
+}
+
+/* ===== Exemples ===== */
+.example-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.example-btn {
+    background: #e9ecef;
+    color: var(--text-light);
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+}
+
+body.dark-mode .example-btn {
+    background: #3a3a3a;
+    color: var(--text-dark);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .nav-links {
+        justify-content: center;
+    }
+    .card {
+        padding: 1.5rem;
+    }
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+}

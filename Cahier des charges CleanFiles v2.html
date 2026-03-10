@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cahier des charges – Nettoyeur de Noms de Fichiers</title>
+    <meta name="description" content="Cahier des charges complet du projet Nettoyeur de Noms de Fichiers : fonctionnalités, options, modes texte et upload, archivage, personnalisation des caractères.">
+    <meta name="keywords" content="cahier des charges, spécifications, nettoyeur de fichiers, renommage batch, outil web, PWA">
+    <meta name="author" content="777 Tools">
+    <meta name="robots" content="index, follow">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Cahier des charges – Nettoyeur de Noms de Fichiers">
+    <meta property="og:description" content="Spécifications détaillées du projet : modes texte et upload, options de nettoyage, archivage ZIP, thème sombre, etc.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cleanfiles7.netlify.app/specs.html">
+    <style>
+        /* Reset et base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            transition: background-color 0.3s, color 0.3s;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Thème sombre */
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode header,
+        body.dark-mode nav,
+        body.dark-mode .card,
+        body.dark-mode footer {
+            background-color: #2d2d2d;
+            border-color: #444;
+        }
+
+        body.dark-mode a {
+            color: #80b4ff;
+        }
+
+        body.dark-mode .btn-theme {
+            background-color: #3a3a3a;
+            color: #fff;
+            border-color: #555;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        .main-nav {
+            background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+            padding: 1rem 0;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-right: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .nav-links a:hover {
+            border-bottom-color: white;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid white;
+            border-radius: 30px;
+            color: white;
+            font-size: 1.2rem;
+            padding: 0.3rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Bouton retour en haut */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #2575fc;
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        #backToTop:hover {
+            background: #1a5fd0;
+            transform: scale(1.1);
+        }
+
+        #backToTop.show {
+            display: flex;
+        }
+
+        /* En-tête de page */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #2575fc;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header .subtitle {
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+
+        body.dark-mode .page-header .subtitle {
+            color: #aaa;
+        }
+
+        /* Cartes */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        body.dark-mode .card {
+            background: #2d2d2d;
+            border-color: #444;
+        }
+
+        .card h2 {
+            color: #2575fc;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .card h3 {
+            color: #495057;
+            margin: 1.5rem 0 1rem;
+            font-size: 1.4rem;
+        }
+
+        body.dark-mode .card h3 {
+            color: #ccc;
+        }
+
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        body.dark-mode th,
+        body.dark-mode td {
+            border-bottom-color: #444;
+        }
+
+        th {
+            background: #f1f3f5;
+            font-weight: 600;
+        }
+
+        body.dark-mode th {
+            background: #3a3a3a;
+            color: #e0e0e0;
+        }
+
+        /* Listes */
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            background: #e7f3ff;
+            color: #2575fc;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        body.dark-mode .badge {
+            background: #1e3a5f;
+            color: #80b4ff;
+        }
+
+        /* Pied de page */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+
+        body.dark-mode footer {
+            border-top-color: #444;
+            color: #aaa;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .nav-links {
+                justify-content: center;
+                margin-right: 0;
+            }
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container container">
+            <a href="#" class="nav-logo">
+                <span>⚡</span> Nettoyeur 777
+            </a>
+            <div class="nav-links">
+                <a href="#introduction">Intro</a>
+                <a href="#objectifs">Objectifs</a>
+                <a href="#fonctionnalites">Fonctionnalités</a>
+                <a href="#options">Options</a>
+                <a href="#technique">Technique</a>
+                <button id="themeToggle" class="theme-toggle" aria-label="Basculer thème">🌙</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteneur principal -->
+    <main class="container">
+        <!-- En-tête -->
+        <header class="page-header">
+            <h1>📄 Cahier des charges</h1>
+            <p class="subtitle">Nettoyeur de Noms de Fichiers – Version 2.0</p>
+            <p><strong>Date :</strong> 10 mars 2026 &nbsp; | &nbsp; <strong>Auteur :</strong> 777 Tools</p>
+        </header>
+
+        <!-- Introduction -->
+        <section id="introduction" class="card">
+            <h2>1. Introduction</h2>
+            <p>Le projet <strong>"Nettoyeur de Noms de Fichiers"</strong> est une application web progressive (PWA) permettant de nettoyer les noms de fichiers en supprimant automatiquement les caractères invalides (émoticônes, symboles spéciaux, ponctuation problématique, etc.) tout en conservant les extensions. L'application fonctionne entièrement côté client, sans envoi de données vers un serveur, garantissant ainsi la confidentialité des fichiers traités.</p>
+            <p>Deux modes d'utilisation sont proposés :</p>
+            <ul>
+                <li><span class="badge">Mode Texte</span> Saisie ou copier‑coller de listes de noms de fichiers.</li>
+                <li><span class="badge">Mode Upload</span> Téléversement de fichiers réels (jusqu'à 500 fichiers, 2 Go chacun, 10 Go total) pour renommage et téléchargement local.</li>
+            </ul>
+            <p>L'application intègre également un thème clair/sombre, un bouton de retour en haut, et une fonction d'archivage ZIP natif.</p>
+        </section>
+
+        <!-- Objectifs -->
+        <section id="objectifs" class="card">
+            <h2>2. Objectifs du projet</h2>
+            <ul>
+                <li>Fournir un outil gratuit, simple et rapide pour nettoyer les noms de fichiers contenant des caractères non autorisés par les systèmes de fichiers.</li>
+                <li>Éviter les erreurs de téléchargement ou de partage dues à des noms de fichiers mal formés.</li>
+                <li>Garantir la confidentialité : aucun fichier n'est transmis à un serveur.</li>
+                <li>Offrir une interface intuitive et accessible, avec des options de personnalisation poussées.</li>
+                <li>Permettre le traitement par lots (batch) de centaines de fichiers.</li>
+            </ul>
+        </section>
+
+        <!-- Public cible -->
+        <section class="card">
+            <h2>3. Public cible</h2>
+            <ul>
+                <li>Utilisateurs particuliers ayant des fichiers mal nommés (photos, documents, musique).</li>
+                <li>Professionnels (développeurs, designers, administrateurs) manipulant de gros volumes de fichiers.</li>
+                <li>Toute personne souhaitant normaliser des noms de fichiers avant archivage ou partage.</li>
+            </ul>
+        </section>
+
+        <!-- Fonctionnalités détaillées -->
+        <section id="fonctionnalites" class="card">
+            <h2>4. Fonctionnalités détaillées</h2>
+
+            <h3>4.1 Mode Texte (<code>index.html</code>)</h3>
+            <ul>
+                <li><strong>Zone de saisie</strong> : champ de texte multiligne pour coller une liste de noms (un par ligne).</li>
+                <li><strong>Nettoyage</strong> : bouton "Nettoyer les Noms" appliquant les règles définies.</li>
+                <li><strong>Affichage des résultats</strong> : liste des noms originaux et nettoyés, avec indication des changements.</li>
+                <li><strong>Export</strong> : bouton "Exporter les Résultats" pour télécharger un fichier <code>.txt</code> des noms nettoyés.</li>
+                <li><strong>Exemples par défaut</strong> : chargement automatique d'une liste d'exemples.</li>
+            </ul>
+
+            <h3>4.2 Mode Upload (<code>upload.html</code>)</h3>
+            <ul>
+                <li><strong>Zone de glisser‑déposer</strong> (drop zone) : dépôt de fichiers ou clic pour sélectionner.</li>
+                <li><strong>Limites techniques</strong> : max 500 fichiers, 2 Go/fichier, 10 Go total.</li>
+                <li><strong>Barre de progression</strong> pour les gros volumes.</li>
+                <li><strong>Statistiques en temps réel</strong> : nombre de fichiers, taille utilisée, fichiers nettoyés.</li>
+                <li><strong>Liste des fichiers</strong> : chaque fichier affiche nom original, nom nettoyé (si traité), taille, type, boutons individuels (nettoyer, télécharger, supprimer).</li>
+                <li><strong>Actions globales</strong> : "Nettoyer tous", "Télécharger tout" (avec choix du parallélisme), "Tout effacer".</li>
+                <li><strong>Archivage</strong> : modal pour créer une archive ZIP (natif, sans dépendance) avec options (compression, dossier interne, historique).</li>
+            </ul>
+
+            <h3>4.3 Options de nettoyage (communes aux deux modes)</h3>
+            <table>
+                <thead>
+                    <tr><th>Option</th><th>Description</th><th>Exemple</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Remplacer les espaces par des underscores</td><td>Transforme les espaces en <code>_</code></td><td><code>"mon fichier.txt" → "mon_fichier.txt"</code></td></tr>
+                    <tr><td>Supprimer tous les espaces</td><td>Enlève tous les espaces</td><td><code>"mon fichier.txt" → "monfichier.txt"</code></td></tr>
+                    <tr><td>Convertir en minuscules</td><td>Met tout le nom en minuscules</td><td><code>"MON FICHIER.TXT" → "mon fichier.txt"</code></td></tr>
+                    <tr><td>Convertir en majuscules</td><td>Met tout le nom en majuscules</td><td><code>"mon fichier.txt" → "MON FICHIER.TXT"</code></td></tr>
+                    <tr><td>Ajouter un préfixe</td><td>Insère un texte personnalisé au début</td><td><code>"fichier.txt" + préfixe "clean_" → "clean_fichier.txt"</code></td></tr>
+                    <tr><td>Ajouter un suffixe numérique aux doublons</td><td>Numérote automatiquement les noms identiques</td><td><code>"fichier.txt", "fichier.txt" → "fichier.txt", "fichier1.txt"</code></td></tr>
+                    <tr><td>Appliquer le suffixe aussi au premier fichier</td><td>Force la numérotation même pour le premier</td><td><code>"fichier.txt" → "fichier1.txt"</code></td></tr>
+                    <tr><td>Utiliser uniquement le suffixe comme nom</td><td>Le nom devient le suffixe + numéro</td><td><code>"fichier.txt" + suffixe "doc" → "doc1.txt"</code></td></tr>
+                </tbody>
+            </table>
+
+            <h3>4.4 Gestion des caractères invalides</h3>
+            <ul>
+                <li><strong>Liste par défaut</strong> : plus de 80 caractères (émoticônes, symboles spéciaux, ponctuation, contrôles).</li>
+                <li><strong>Interface de personnalisation</strong> :
+                    <ul>
+                        <li>Affichage de la liste actuelle avec défilement.</li>
+                        <li>Bouton "Modifier la liste" ouvrant un modal.</li>
+                        <li>Dans le modal : suppression individuelle, ajout par saisie, présélections rapides (majuscules, minuscules, chiffres, émoticônes, spéciaux, ponctuation).</li>
+                        <li><strong>Boutons d'exemple</strong> : en dehors du modal, groupes de caractères spéciaux ; un clic les ajoute directement.</li>
+                    </ul>
+                </li>
+                <li><strong>Persistance</strong> : la liste personnalisée est sauvegardée dans <code>localStorage</code>.</li>
+            </ul>
+
+            <h3>4.5 Archivage (mode upload)</h3>
+            <ul>
+                <li>Modal accessible via un bouton dédié.</li>
+                <li><strong>Options</strong> :
+                    <ul>
+                        <li>Niveau de compression (0‑9, indicatif car ZIP natif non compressé).</li>
+                        <li>Mot de passe (désactivé, non supporté).</li>
+                        <li>Division de l'archive (split) par taille.</li>
+                        <li>Choix du format (ZIP actif, 7Z et RAR désactivés).</li>
+                        <li>Nom du dossier interne dans l'archive.</li>
+                    </ul>
+                </li>
+                <li><strong>Historique</strong> : les archives créées sont listées avec possibilité de les re-télécharger.</li>
+                <li><strong>Barre de progression</strong> pendant la création.</li>
+            </ul>
+
+            <h3>4.6 Interface utilisateur</h3>
+            <ul>
+                <li><strong>Thème clair/sombre</strong> : bouton dans la navigation, persistance via <code>localStorage</code>.</li>
+                <li><strong>Bouton retour en haut</strong> : apparaît après défilement, remonte en douceur.</li>
+                <li><strong>Responsive design</strong> : adaptation mobile (menu hamburger, empilement).</li>
+                <li><strong>Accessibilité</strong> : labels ARIA, rôles, annonces pour lecteurs d'écran.</li>
+                <li><strong>Notifications</strong> : toasts pour informer l'utilisateur des actions.</li>
+            </ul>
+        </section>
+
+        <!-- Contraintes techniques -->
+        <section id="technique" class="card">
+            <h2>5. Contraintes techniques</h2>
+            <ul>
+                <li><strong>Navigateurs</strong> : tous les navigateurs modernes (Chrome, Firefox, Safari, Edge).</li>
+                <li><strong>Technologies</strong> : HTML5, CSS3 (Flexbox/Grid), JavaScript ES6+, localStorage, File API.</li>
+                <li><strong>Performance</strong> : traitement par chunks pour les gros fichiers, Web Workers si nécessaire.</li>
+                <li><strong>Hébergement</strong> : compatible avec Netlify (fichiers statiques).</li>
+                <li><strong>Sécurité</strong> : aucun téléversement serveur, tout est local.</li>
+            </ul>
+        </section>
+
+        <!-- Équipe et rôles (optionnel) -->
+        <section class="card">
+            <h2>6. Équipe projet</h2>
+            <ul>
+                <li><strong>Chef de projet</strong> : pilotage, validation des fonctionnalités.</li>
+                <li><strong>Développeur front-end</strong> : HTML/CSS/JS, intégration des composants.</li>
+                <li><strong>Développeur back-end</strong> : non requis (application 100% client).</li>
+                <li><strong>Designer UI/UX</strong> : maquettes, thème, responsive.</li>
+                <li><strong>Testeur QA</strong> : validation des cas d'usage, compatibilité navigateurs.</li>
+            </ul>
+        </section>
+
+        <!-- Conclusion -->
+        <section class="card">
+            <h2>7. Livrables attendus</h2>
+            <ul>
+                <li>Fichiers sources (HTML, CSS, JS) commentés.</li>
+                <li>Documentation technique et guide d'utilisation.</li>
+                <li>Démonstration en ligne (URL de test).</li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- Pied de page -->
+    <footer>
+        <p>Nettoyeur de Fichiers © 2026 | Architecture 777</p>
+        <p>Cahier des charges version 2.0 – 10 mars 2026</p>
+    </footer>
+
+    <!-- Bouton retour en haut -->
+    <button id="backToTop" title="Retour en haut">↑</button>
+
+    <!-- JavaScript pour thème et retour haut -->
+    <script>
+        (function() {
+            // === THÈME ===
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+
+            // Initialisation du thème
+            function initTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark') {
+                    body.classList.add('dark-mode');
+                    if (themeToggle) themeToggle.textContent = '☀️';
+                } else {
+                    body.classList.remove('dark-mode');
+                    if (themeToggle) themeToggle.textContent = '🌙';
+                }
+            }
+
+            // Bascule
+            function toggleTheme() {
+                body.classList.toggle('dark-mode');
+                const isDark = body.classList.contains('dark-mode');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                if (themeToggle) themeToggle.textContent = isDark ? '☀️' : '🌙';
+            }
+
+            if (themeToggle) {
+                themeToggle.addEventListener('click', toggleTheme);
+            }
+
+            initTheme();
+
+            // === BOUTON RETOUR EN HAUT ===
+            const backBtn = document.getElementById('backToTop');
+
+            function toggleBackToTop() {
+                if (window.scrollY > 300) {
+                    backBtn.classList.add('show');
+                } else {
+                    backBtn.classList.remove('show');
+                }
+            }
+
+            window.addEventListener('scroll', toggleBackToTop);
+
+            backBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // === ANCRES DOUCES POUR LES LIENS INTERNES ===
+            document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "Nettoyeur de Noms de Fichiers",
+  "short_name": "CleanFiles7",
+  "description": "Nettoyez vos noms de fichiers en un clic",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2575fc",
+  "icons": [
+    {
+      "src": "/assets/icon/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icon/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
